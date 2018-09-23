@@ -27,7 +27,7 @@
             chart:[]
           }
       },methods:{
-        //计算平均值
+         //计算平均值
         yearAverageCompute:function(data,index){
             var sum = 0;
             var average = 0;
@@ -125,6 +125,14 @@
 
 
         },
+        //2016年gdp
+        Gdp_2016:function(){
+          for (var i =0;i<this.gdpArray.length;i++){
+            this.gdp2016.push(this.gdpArray[i][this.gdpArray[i].length-1])
+          }
+          console.log(this.gdp2016);
+          this.tableMaking(4)
+        },
         //创建gdp数组
         createArray:function () {
             var n;
@@ -155,7 +163,7 @@
             container: 'mountNode',
             forceFit: true,
             height:600,
-            width:300
+            width:800
           });
           this.chart=chart;
           //2000-2016年期间中国大陆年人均GDP变化折线图
@@ -165,12 +173,6 @@
               data.push(temp);
             }
             chart.source(data);
-            chart.scale('value', {
-              min: 0
-            });
-            chart.scale('year', {
-              range: [0, 1]
-            });
             chart.tooltip({
               crosshairs: {
                 type: 'line'
@@ -195,6 +197,7 @@
             });
             chart.interval().position('province*value');
           }
+          //变异系数
           else if (index ===3){
               data=[];
               for (i=0;i<this.year.length;i++){
@@ -219,6 +222,19 @@
               lineWidth: 1
             });
           }
+          //2016年平均GDP直方图
+          else if (index===4){
+            data=[];
+            for (i = 0;i<this.gdp2016.length;i++){
+              temp={province:this.province[i],value:this.gdp2016[i]};
+              data.push(temp)
+            }
+            chart.source(data);
+            chart.scale('province', {
+              tickInterval: 20
+            });
+            chart.interval().position('province*value');
+          }
           chart.render();
         },
         turnOff(){
@@ -229,12 +245,17 @@
         this.yearAverageCompute(this.gdpArray,'year_average');
         this.yearAverageCompute(this.gdpArray,'province_average');
         this.SDcompute_CV('year');
-        this.SDcompute_CV('province')
+        this.SDcompute_CV('province');
   }
 
     }
 </script>
 
 <style scoped>
+#mountNode{
+  position: absolute;
+  width:800px;
+  left: 350px;
 
+}
 </style>
